@@ -22,6 +22,7 @@ public class User {
     private String name;
     @NotNull(message = "Surname cannot be NULL")
     private String surname;
-
+    @NotNull(message = "E-mail cannot be NULL")
+    private String email;
 
 }

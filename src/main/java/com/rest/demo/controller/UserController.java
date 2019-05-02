@@ -5,9 +5,13 @@ import com.rest.demo.exception.CustomMessage;
 import com.rest.demo.exception.UserNotFoundException;
 import com.rest.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
@@ -55,6 +59,7 @@ public class UserController {
     }
 
 
+
     @PostMapping(path =  "/save" , consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
     public ResponseEntity createUser(@Valid @RequestBody final User user) {
           userService.saveUser(user);
@@ -67,12 +72,12 @@ public class UserController {
 
 
     @PutMapping(path =  "/{id}", consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody final User user) {
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody final User user) {
         try {
             userService.findUserById(id);
             User userToBeStored = userService.updateUser(userService.findUserById(id), user);
             userService.saveUser(userToBeStored);
-            return new ResponseEntity<User>(userToBeStored, HttpStatus.OK);
+            return new ResponseEntity<>(userToBeStored, HttpStatus.OK);
         }catch (UserNotFoundException e) {
             return new ResponseEntity(new CustomMessage(new Date(), "Sorry couldn't find user with id: " + id), HttpStatus.CONFLICT);
         }
@@ -90,6 +95,6 @@ public class UserController {
         }
     }
 
-    
+
 
 }

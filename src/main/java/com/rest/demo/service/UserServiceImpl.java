@@ -42,14 +42,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User userToSave) {
-        return usersRepository.saveAndFlush(userToSave);
+        return usersRepository.save(userToSave);
     }
 
     @Override
     public User updateUser(User storedUser ,@Valid User userToBeUpdated) {
         storedUser.setName(userToBeUpdated.getName());
         storedUser.setSurname(userToBeUpdated.getSurname());
-        return usersRepository.saveAndFlush(storedUser);
+        storedUser.setEmail(userToBeUpdated.getEmail());
+        return usersRepository.save(storedUser);
     }
 
     @Override
@@ -59,6 +60,5 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new UserNotFoundException();
         }
-
     }
 }
