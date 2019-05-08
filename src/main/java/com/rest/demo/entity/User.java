@@ -2,22 +2,17 @@ package com.rest.demo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-@Entity
+@RedisHash("USER")
 @Getter
 @Setter
-public class User {
+public class User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
+    private String id;
     @NotNull(message = "Name cannot be NULL")
     private String name;
     @NotNull(message = "Surname cannot be NULL")

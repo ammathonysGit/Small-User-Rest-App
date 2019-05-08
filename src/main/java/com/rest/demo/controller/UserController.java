@@ -5,19 +5,17 @@ import com.rest.demo.exception.CustomMessage;
 import com.rest.demo.exception.UserNotFoundException;
 import com.rest.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/users")
@@ -33,8 +31,8 @@ public class UserController {
 
     //  /users/all catch this GET request and return a list of all Users.
     @GetMapping(path = "/all" , consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<List<User>> getAllUsers() {
-         List<User>  users =userService.getAllUsers();
+    public ResponseEntity<Map<String, User>> getAllUsers() {
+         Map<String, User> users = userService.getAllUsers();
 
           if (users.isEmpty()){
             return new ResponseEntity(new CustomMessage(new Date(), "No users are currently stored."), HttpStatus.NOT_FOUND);
@@ -48,7 +46,7 @@ public class UserController {
 
     // /users/{name} catch GET request and by the PathVariable in the brackets {name} return that user with the give name.
     @GetMapping(path = "/{name}" , produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<User> getUserByName(@PathVariable final String name) {
+    public ResponseEntity<User> getUserByName(@PathVariable final String name) throws UserNotFoundException {
         User user = userService.findUserByName(name);
 
         if (user != null) {
@@ -64,16 +62,13 @@ public class UserController {
     @PostMapping(path =  "/save" , consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
     public ResponseEntity createUser(@Valid @RequestBody final User user) {
           userService.saveUser(user);
-          if (userService.findUserByName(user.getName()) != null) {
-              return new ResponseEntity(new CustomMessage(new Date(), "User created successfully!"), HttpStatus.OK);
-          } else {
-              return new ResponseEntity(new CustomMessage(new Date(), "Sorry there was a problem creating the user."), HttpStatus.CONFLICT);
-          }
+
+          return new ResponseEntity(new CustomMessage(new Date(), "User created successfully!"), HttpStatus.OK);
     }
 
 
     @PutMapping(path =  "/{id}", consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody final User user) {
+    public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody final User user) {
         try {
             userService.findUserById(id);
             User userToBeStored = userService.updateUser(userService.findUserById(id), user);
@@ -82,7 +77,6 @@ public class UserController {
         }catch (UserNotFoundException e) {
             return new ResponseEntity(new CustomMessage(new Date(), "Sorry couldn't find user with id: " + id), HttpStatus.CONFLICT);
         }
-
     }
 
 

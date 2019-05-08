@@ -4,13 +4,15 @@ import com.rest.demo.entity.User;
 import com.rest.demo.exception.UserNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
-    User findUserById(Integer id) throws UserNotFoundException;
-    List<User> getAllUsers();
-    User findUserByName(String name);
-    User saveUser(User userToSave);
+    User findUserById(String id) throws UserNotFoundException;
+    Map<String, User> getAllUsers();
+//    List<User> getAllUsers();
+    User findUserByName(String name) throws UserNotFoundException;
+    void saveUser(User userToSave);
     User updateUser(User storedUser, User userToBeSaved);
     void deleteUserById(Integer id) throws UserNotFoundException;
 }
