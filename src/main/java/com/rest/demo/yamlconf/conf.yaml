@@ -1,0 +1,44 @@
+#This is a comment in YAML
+
+person:
+  name : "Vasil"
+  surname : "Vasilev"
+  age : 22
+  fav_number : 23232.32432432
+  male : true
+  birthday : 1996-07-08
+  flaws : null
+  hobbies:
+    - cars
+    - sports
+    - riding
+  movies : ["I'm number One", "2F2F"] # hobbies and movies are the same YAML will represent them as a LIST
+  friends:
+    - name : "Someone"
+      age : 22
+    - {name : "Adam", age : 22 }  #Yaml will parse them as List items, doesn't matter the way we describe them (friends list)
+    -
+      name : "Joe"
+      age : 23
+  description : > # > This symbol will tell YAML to treat value of description in a single line
+    Hello asdasdasdasdcas,
+    asdasdasdasdasdasdasd,
+    asdasdasdasdasdasdasd,
+    asdasdasasdasdasdasdas
+  signature : | # | This symbol will tell YAML to treat the value of signature as the way we describe it
+    Vasil
+    Kremikovci
+    asda@a.com
+
+newPerson :
+  name : &nameOfPerson "Vasil": #This &name will get the value of the key named "name" and store it in nameOfPerson.
+  id : *nameOfPerson # by doing *nameOfPerson store the value of nameOfPerson to the key 'id'. In this case now the key id has the value of the key name which is Vasil
+  #the upper row is equal to: id : "Vasil"
+car : &car #This &car will contain the key value pair of the car object in this case model : "W204"
+  model : "W204"
+newCar :
+  << : *car #This will get the key value pair from car and save it here in the newCar object.
+  # the upper row is equal to model : "W204"
+castingToDifferentTypes :
+  age : !!str 23 #This !!str will make the integer value of age: 23 to a String
+  money : !!float 205 #This !!float will make the integer value of money: 205 to a Float

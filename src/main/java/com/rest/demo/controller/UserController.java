@@ -15,6 +15,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class UserController {
 
     //  /users/all catch this GET request and return a list of all Users.
     @GetMapping(path = "/all" , consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
          List<User>  users =userService.getAllUsers();
 
           if (users.isEmpty()){
@@ -40,7 +41,7 @@ public class UserController {
         } else if (users != null) {
              return new ResponseEntity<>(users, HttpStatus.OK);
          } else {
-              return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
           }
 
     }
@@ -94,7 +95,5 @@ public class UserController {
             return new ResponseEntity(new CustomMessage(new Date(), "Sorry couldn't find user with id: " + id), HttpStatus.CONFLICT);
         }
     }
-
-
 
 }
