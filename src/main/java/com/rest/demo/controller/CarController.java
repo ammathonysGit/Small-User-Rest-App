@@ -3,6 +3,7 @@ package com.rest.demo.controller;
 import com.rest.demo.entity.Car;
 import com.rest.demo.exception.CustomMessage;
 import com.rest.demo.service.CarService;
+import com.rest.demo.service.CarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/cars")
@@ -27,27 +27,48 @@ public class CarController {
     }
 
     @GetMapping(path = "/all", consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<Map<String, Car>> getAllCars() {
-        Map<String, Car> map = carService.getAllCars();
-
-        if (map.isEmpty() || map == null) {
-            return new ResponseEntity(new CustomMessage(new Date(), " Sorry there are no cars available"), HttpStatus.NOT_FOUND);
+    public ResponseEntity getAllCars() {
+        if (carService instanceof CarServiceImpl) {
+            Map<String, Car> map = carService.getAllCars();
+            if (map.isEmpty() || map == null) {
+                return new ResponseEntity(new CustomMessage(new Date(), " Sorry there are no cars available"), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
         } else {
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            List<Car> carList = carService.getAllCars();
+
+            if (carList.isEmpty() || carList == null) {
+                return new ResponseEntity(new CustomMessage(new Date(), " Sorry there are no cars available"), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(carList, HttpStatus.OK);
+            }
         }
+
+
     }
 
     @GetMapping(path = "/search", consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<Map<String, Car>> filterCars
+    public ResponseEntity filterCars
             (@RequestParam(name = "brand", required = true)  String brand, @RequestParam(name = "model", required = true)  String model,
              @RequestParam(name = "colour", defaultValue = "")  String colour, @RequestParam(name = "horsePower", required = false, defaultValue = "0")  Integer horsePower) {
-        Map<String, Car> map = carService.filterCarsByBrandModelColourHorsePower(brand, model, colour, horsePower);
+        if (carService instanceof CarServiceImpl) {
+            Map<String, Car> map = carService.filterCarsByBrandModelColourHorsePower(brand, model, colour, horsePower);
 
-        if (map.isEmpty() || map == null) {
-            return new ResponseEntity(new CustomMessage(new Date(), " Sorry there are no cars available with brand: "
-                    + brand + " model: " + model + " colour: " + colour + " horse power:" +  horsePower), HttpStatus.NOT_FOUND);
+            if (map.isEmpty() || map == null) {
+                return new ResponseEntity(new CustomMessage(new Date(), " Sorry there are no cars available with brand: "
+                        + brand + " model: " + model + " colour: " + colour + " horse power:" + horsePower), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
         } else {
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            List<Car> cars = carService.filterCarsByBrandModelColourHorsePower(brand, model, colour, horsePower);
+            if (cars.isEmpty() || cars == null) {
+                return new ResponseEntity(new CustomMessage(new Date(), " Sorry there are no cars available with brand: "
+                        + brand + " model: " + model + " colour: " + colour + " horse power:" + horsePower), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity(cars, HttpStatus.OK);
+            }
         }
 
     }
@@ -64,13 +85,22 @@ public class CarController {
     }
 
     @GetMapping(path = "/car/brand/{brand}", consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    public ResponseEntity<Map<String, Car>> getAllCarsWithBrand(@PathVariable String brand) {
-        Map<String, Car> cars = carService.getAllCarsWithBrand(brand);
+    public ResponseEntity  getAllCarsWithBrand(@PathVariable String brand) {
+        if (carService instanceof CarServiceImpl) {
+            Map<String, Car> cars = carService.getAllCarsWithBrand(brand);
 
-        if (cars.isEmpty() || cars == null) {
-            return new ResponseEntity(new CustomMessage(new Date(), "Sorry there were no cars found with brand: " + brand), HttpStatus.NOT_FOUND);
+            if (cars.isEmpty() || cars == null) {
+                return new ResponseEntity(new CustomMessage(new Date(), "Sorry there were no cars found with brand: " + brand), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(cars, HttpStatus.OK);
+            }
         } else {
-            return new ResponseEntity<>(cars, HttpStatus.OK);
+            List<Car> cars = carService.getAllCarsWithBrand(brand);
+            if (cars.isEmpty() || cars == null) {
+                return new ResponseEntity(new CustomMessage(new Date(), "Sorry there were no cars found with brand: " + brand), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(cars, HttpStatus.OK);
+            }
         }
     }
 

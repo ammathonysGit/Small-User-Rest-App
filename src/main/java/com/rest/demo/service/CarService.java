@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface CarService {
 
-    Map<String, Car> getAllCars();
-    Map<String, Car> getAllCarsWithBrand(String brand);
-    Map<String, Car> filterCarsByBrandModelColourHorsePower(String brand, String model, String colour, Integer horsePower);
+    <T> T getAllCars();
+    <T> T getAllCarsWithBrand(String brand);
+    <T> T filterCarsByBrandModelColourHorsePower(String brand, String model, String colour, Integer horsePower);
     void saveCar(Car carToSave);
     void deleteCar(String id);
     Car findCarById(String id);

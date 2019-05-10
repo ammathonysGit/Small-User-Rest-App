@@ -14,6 +14,7 @@ import java.util.Map;
 
 
 @Service
+@Profile("redistemp")
 public class CarServiceImpl implements CarService {
 
     private RedisTemplate redisTemplate;
