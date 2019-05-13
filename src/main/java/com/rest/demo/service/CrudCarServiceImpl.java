@@ -4,6 +4,9 @@ import com.rest.demo.entity.Car;
 import com.rest.demo.repository.CarRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Service;
@@ -23,17 +26,15 @@ public class CrudCarServiceImpl implements CarService {
         this.carRepository = carRepository;
     }
 
-
+    @Cacheable(value = "cars")
     @Override
-    public List<Car> getAllCars() {
-        return (List<Car>) carRepository.findAll();
-    }
+    public List<Car> getAllCars() { System.out.println("Getting cars");return (List<Car>) carRepository.findAll(); }
 
+    @Cacheable(value = "cars", key = "#brand")
     @Override
-    public List<Car> getAllCarsWithBrand(String brand) {
-        return carRepository.findByBrand(brand);
-    }
+    public List<Car> getAllCarsWithBrand(String brand) { return carRepository.findByBrand(brand); }
 
+    @Cacheable(value = "cars")
     @Override
     public List<Car> filterCarsByBrandModelColourHorsePower(String brand, String model, String colour, Integer horsePower) {
         List<Car> cars = (List<Car>) carRepository.findAll();
@@ -61,6 +62,7 @@ public class CrudCarServiceImpl implements CarService {
         carRepository.save(carToSave);
     }
 
+    @CacheEvict(value = "car", key = "#id")
     @Override
     public void deleteCar(String id) {
         carRepository.delete(carRepository.findById(id).get());
@@ -71,6 +73,7 @@ public class CrudCarServiceImpl implements CarService {
         return carRepository.findById(id).get();
     }
 
+    @CachePut(value = "car", key = "#storedCar")
     @Override
     public void updateCar(Car storedCar, Car carToUpdate) {
         storedCar.setModel(carToUpdate.getModel());

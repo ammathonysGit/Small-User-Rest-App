@@ -3,6 +3,7 @@ package com.rest.demo.service;
 import com.rest.demo.entity.Car;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,13 +27,17 @@ public class CarServiceImpl implements CarService {
         this.hashOperations = redisTemplate.opsForHash();
     }
 
+
     @Override
     public Map<String, Car> getAllCars() {
+        System.out.println("Getting cars");
         return hashOperations.entries("cars");
     }
 
+
     @Override
     public Map<String, Car> getAllCarsWithBrand(String brand) {
+        System.out.println("Getting cars with brand");
         Map<String, Car> cars = hashOperations.entries("cars");
 
         for (Map.Entry<String, Car> entry :

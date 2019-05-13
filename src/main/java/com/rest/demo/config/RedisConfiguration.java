@@ -1,6 +1,7 @@
 package com.rest.demo.config;
 
 import com.rest.demo.entity.User;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -9,6 +10,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @EnableRedisRepositories
 @Configuration
+@EnableCaching
 public class RedisConfiguration {
 
     //The code below is connecting to a remote redis server with the given hostname and port number.
@@ -35,5 +37,7 @@ public class RedisConfiguration {
 
         return redisTemplate;
     }
+
+
 
 }
