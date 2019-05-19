@@ -15,20 +15,20 @@ public class RedisConfiguration {
 
     //The code below is connecting to a remote redis server with the given hostname and port number.
     // This is used when we want to connect to a particular Redis but in out case we use default.
-//    @Bean
-//    JedisConnectionFactory jedisConnectionFactory() {
-//        JedisConnectionFactory jedisConFactory
-//                = new JedisConnectionFactory();
-//        jedisConFactory.setHostName("localhost");
-//        jedisConFactory.setPort(6379);
-//        return jedisConFactory;
-//    }
-
-
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+        JedisConnectionFactory jedisConFactory
+                = new JedisConnectionFactory();
+        jedisConFactory.setHostName("localhost");
+        jedisConFactory.setPort(7000);
+        return jedisConFactory;
     }
+
+
+//    @Bean
+//    JedisConnectionFactory jedisConnectionFactory() {
+//        return new JedisConnectionFactory();
+//    }
 
     @Bean
     RedisTemplate<String, User> redisTemplate() {
