@@ -3,20 +3,22 @@ version : '3'
 services:
   rest:
     build: . #build all
+    container_name: "restcontainer"
     image: rest_web # build image called rest_web
     ports:
       - "8080:8080" # -p 8080:8080
-   # networks:
-    #  - docker-compose-network
-    links:
-      - redis:rediscon # redis is the name of the service below and rediscon is the host name we gave it in the application.properties or the RedisConfiguration class
+    networks:
+      - ubuntunetwork
+    #links:
+     # - redis:rediscon # redis is the name of the service below and rediscon is the host name we gave it in the application.properties or the RedisConfiguration class
   redis:
+    container_name: "rediscon"
     image: redis #run image called redis
     command: ["redis-server", "--protected-mode", "no"] # execute these commands
     ports:
       - "7000:6379" # -p 7000:6379
-    #networks:
-     # - docker-compose-network
+    networks:
+      - ubuntunetwork
 
 #networks:
  # docker-compose-network:
@@ -26,7 +28,7 @@ services:
 
 
 
-#networks:                     #for Compose File v3.4 and under
- #     ubuntunetwork:
-  #      external:
-   #       name: ubuntunetwork
+networks:                     #for Compose File v3.4 and under
+      ubuntunetwork:
+        external:
+          name: ubuntunetwork
