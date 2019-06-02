@@ -29,6 +29,6 @@ services:
 
 
 networks:                     #for Compose File v3.4 and under
-      ubuntunetwork:
+      ubuntunetwork:          #this allows us to use a network which is already created.
         external:
           name: ubuntunetwork
