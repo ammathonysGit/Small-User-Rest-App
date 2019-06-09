@@ -27,6 +27,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity(new CustomMessage(new Date(), "Invalid search parameters brand or model.! "), HttpStatus.CONFLICT);
     }
 
+// BoatController may throw NoSuchEntityFound Exception and by extending ResponseEntityExceptionHandler I can handle it here in my custom method(handler
+    //I just need to give the method @ExceptionHandler and value = class exception i want to handle.
+    @ExceptionHandler(value = {NoSuchEntityFound.class})
+    public ResponseEntity handleNoSuchEntityFoundException(NoSuchEntityFound noSuchEntityFound, WebRequest webRequest) {
+        return new ResponseEntity(new CustomMessage(new Date(),noSuchEntityFound.getLocalizedMessage()), HttpStatus.NOT_FOUND);
+    }
+
+
+
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleAnyException(Exception e, WebRequest webRequest) {
         CustomMessage customMessage = new CustomMessage(new Date(), e.getMessage());

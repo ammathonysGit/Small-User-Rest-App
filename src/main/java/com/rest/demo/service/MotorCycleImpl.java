@@ -3,6 +3,7 @@ package com.rest.demo.service;
 
 import com.rest.demo.entity.Motorcycle;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class MotorCycleImpl implements MotorcycleService {
     private RedisTemplate redisTemplate;
     private HashOperations hashOperations;
 
+    @Autowired
     public MotorCycleImpl(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();

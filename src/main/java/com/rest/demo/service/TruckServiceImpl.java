@@ -1,12 +1,14 @@
 package com.rest.demo.service;
 
 import com.rest.demo.entity.Truck;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -72,14 +74,31 @@ public class TruckServiceImpl implements TruckService {
     public Map<String, Truck> filterTrucksByAllFields(String brand, String mode, Integer horsePower, String colour) {
         Map<String, Truck> truckMap = hashOperations.entries("trucks");
 
+        if (StringUtils.isBlank(colour) || horsePower == null || horsePower <= 0) {
+            return filterTrucksByRequired(brand, mode);
+        } else {
+
+            for (Map.Entry<String, Truck> entry :
+                    truckMap.entrySet()) {
+                if (!entry.getValue().getBrand().equals(brand) && entry.getValue().getColour().equals(colour)
+                        && entry.getValue().getModel().equals(mode) && entry.getValue().getHorsePower().equals(horsePower)) {
+                    truckMap.remove(entry.getKey(), entry.getValue());
+                }
+            }
+            return truckMap;
+        }
+    }
+
+    private Map<String, Truck> filterTrucksByRequired(String brand, String model) {
+        Map<String, Truck> truckMap = hashOperations.entries("trucks");
+
         for (Map.Entry<String, Truck> entry:
              truckMap.entrySet()) {
-            if (!entry.getValue().getBrand().equals(brand) && entry.getValue().getColour().equals(colour)
-            && entry.getValue().getModel().equals(mode) && entry.getValue().getHorsePower().equals(horsePower)) {
+            if (!entry.getValue().getBrand().equals(brand) && !entry.getValue().getModel().equals(model)) {
                 truckMap.remove(entry.getKey(), entry.getValue());
             }
         }
-        return truckMap;
+        return  truckMap;
     }
 
 }
