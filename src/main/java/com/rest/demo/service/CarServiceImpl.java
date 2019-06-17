@@ -37,7 +37,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Map<String, Car> getAllCarsWithBrand(String brand) {
-        System.out.println("Getting cars with brand");
         Map<String, Car> cars = hashOperations.entries("cars");
 
         for (Map.Entry<String, Car> entry :

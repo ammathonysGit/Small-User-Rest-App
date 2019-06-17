@@ -1,0 +1,3 @@
+services:
+  shipping:
+    getAllShippers: localhost:8080/shipping/ship/1

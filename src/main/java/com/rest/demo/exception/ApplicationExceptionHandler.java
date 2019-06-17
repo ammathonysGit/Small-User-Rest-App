@@ -13,7 +13,7 @@ import java.util.Date;
 
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
-    //By implementing the ResponseEntityExceptionHandler I can handle all the exceptions that the class throws in the way I want just by overriding the methods for the exceptions.
+    //By extending the ResponseEntityExceptionHandler I can handle all the exceptions that Spring throws in the way I want just by overriding the methods for the exceptions.
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -35,7 +35,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
 
-
+//If I have a custom exception i can catch it and do something like the example bellow.
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleAnyException(Exception e, WebRequest webRequest) {
         CustomMessage customMessage = new CustomMessage(new Date(), e.getMessage());

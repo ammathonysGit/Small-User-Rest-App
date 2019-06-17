@@ -1,5 +1,6 @@
 package com.rest.demo.controller;
 
+import com.rest.demo.ShippingUrls;
 import com.rest.demo.entity.Motorcycle;
 import com.rest.demo.exception.CustomMessage;
 import com.rest.demo.service.MotorcycleService;
@@ -18,16 +19,17 @@ import java.util.Map;
 public class MotorCycleController {
 
     private MotorcycleService motorcycleService;
-
+    private ShippingUrls shippingUrls;
     @Autowired
-    public MotorCycleController(MotorcycleService motorcycleService) {
+    public MotorCycleController(MotorcycleService motorcycleService, ShippingUrls shippingUrls) {
         this.motorcycleService = motorcycleService;
+        this.shippingUrls = shippingUrls;
     }
 
     @GetMapping(path = "/all", consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
     public ResponseEntity getAllMotorCycles() {
         Map<String, Motorcycle> motorcycleMap = motorcycleService.getAllMotorcycles();
-
+        System.out.println(shippingUrls.getGetAllShippers());
         if (motorcycleMap == null || motorcycleMap.isEmpty()) {
            return new ResponseEntity(new CustomMessage(new Date(), "Sorry no motorcycles are currently stored"), HttpStatus.NOT_FOUND);
 
